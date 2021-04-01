@@ -28,7 +28,7 @@ int flag_eta,flag_abs,k;
 
 /* main Parameters */
 double dl,ds,ds1;
-double xxc,yyc;
+double xxc,yyc,zzc;
 double d1,d2,dd1,dd2,dc;
 double cosb,sinb;
 double v1n0,v2n0;
@@ -42,7 +42,7 @@ double ccphi, ssphi;
 double t;
 double yy,zz;
 double ps1,ps2;
-double dum1,dum2,dummy,dummy1,dummy2;
+double dum1,dum2,dummy,dummy1,dummy2, dumdum1,dumdum2,dumdum;
 double tau1,tau2;
 double e1,e2;
 double photons[NE_MAX];
@@ -136,7 +136,7 @@ double psi_deg;
 
 /* 3d model velocities*/
 double v1t_3d[NE0_MAX][NE0_MAX], v2t_3d[NE0_MAX][NE0_MAX], v1n_3d[NE0_MAX][NE0_MAX]
-           ,v2n_3d[NE0_MAX][NE0_MAX];
+           ,v2n_3d[NE0_MAX][NE0_MAX], v1_x, v1_y, v1_z, v2_x, v2_y, v2_z;
 
 /* 3d model densities */
 double sig1_3d[NE0_MAX][NE0_MAX], sig2_3d[NE0_MAX][NE0_MAX];
@@ -163,7 +163,17 @@ double  y_3d_bot_2[NE0_MAX],x_3d_bot_2[NE0_MAX],z_3d_bot_2[NE0_MAX];
 /* 3d model widths of cooling layers */
 double d1l_3d[NE0_MAX][NE0_MAX], d2l_3d[NE0_MAX][NE0_MAX];
 
+/*3d normal vectors*/
+double nor1_x[NE0_MAX][NE0_MAX], nor1_y[NE0_MAX][NE0_MAX], nor1_z[NE0_MAX][NE0_MAX];
+double nor2_x[NE0_MAX][NE0_MAX], nor2_y[NE0_MAX][NE0_MAX], nor2_z[NE0_MAX][NE0_MAX];
 
+/*directional cosi and sin*/
+double cos_x1, cos_y1, cos_z1;
+double cos_x2, cos_y2, cos_z2;
+
+/*aux params*/
+double sig1_interp[NE0_MAX], sig2_interp[NE0_MAX], y_interp[NE0_MAX];
+double x_aux[NE0_MAX], y_aux[NE0_MAX],z_aux[NE0_MAX];
 
 double cone_x[NE0_MAX], cone_y[NE0_MAX];
 

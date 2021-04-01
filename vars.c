@@ -189,7 +189,7 @@ void init_test_values() {
 
     d0 = 60.000;
     incl = 90.0;
-    psi_deg = -30.0;
+    psi_deg = 0.0;
     omega = 270.00;
     e = 0.0;
 
@@ -242,43 +242,44 @@ void output_results_c(){
                   xc[i], yc[i], v1n[i], v1t[i], v2n[i], v2t[i], cphi[i], sphi[i], d1l[i], d2l[i], sig1[i], sig2[i]);
       }
 
-      fprintf(output_file, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-
-      fprintf(output_file, "Lxint= %lf [10^30 erg/s]   Lx= %lf [10^30 erg/s]   Lx[0.5-10.0]= %lf [10^30 erg/s]   Lx/Lkin= %lf [10^30 erg/s]  Lkin= %lf[10^30 erg/s]\n" , lxint, lx, lx1, lx/(ekin1+ekin2), ekin1+ekin2);
-
-
-      fprintf(output_file,"(keV)\t     (keV)\t  (10^30 erg/keV/s)\t  (10^30 ph/bin/s)\t (10^30 erg/keV/s)\n");
-
-      for(int i = 1; i < ne2+1; i++){
-          fprintf(output_file,"%.4le   %.4le    %13.8le\t  %13.8le\t %13.8le\n",
-                  ear1[i], ear1[i+1], spectrum[i-1], photons[i-1], spectrum_int[i]);
-      }
+      
       fclose(output_file);
       puts("done writing file 1");
     }
     //}
-  void three_d_results(){
+void three_d_results(){
 
-      FILE *output_file_2;
-      output_file_2 = fopen("3d_results_eq_-30.dat", "w");
-      fprintf(output_file_2,"x10= %lf eta0= %lf\n", x10, eta0);
-      fprintf(output_file_2,"incl= %lf omega= %lf d0= %lf phase= %lf eccentricity= %lf Skew= %lf\n", incl, omega, d0, phase, e, psi_deg);
-      fprintf(output_file_2,"mdot1= %lf beta1= %lf vinf1= %lf\n", mdot1, beta1, vinf1);
-      fprintf(output_file_2,"mdot2= %lf beta2= %lf vinf2= %lf\n", mdot2, beta2, vinf2);
-      fprintf(output_file_2,"mu1= %lf mu_av1= %lf sum_nz1= %lf nhr1= %lf\n", mu1, mu_av1, sum_nz1, nhr1);
-      fprintf(output_file_2,"mu2= %lf mu_av2= %lf sum_nz2= %lf nhr2= %lf\n", mu2, mu_av2, sum_nz2, nhr2);
-      fprintf(output_file_2,"contact surface:\n");
-      fprintf(output_file_2,"x\t\ty\t\t z\t\tv1n\t\tv1t\t\tv2n\t        v2t\t\tsigma1\t\tsigma2\t\tr\t\ttheta [degrees]\td1l\t\td2l\n");
-      //fprintf(output_file_2,"x_3d\t\ty_3d\t\tz_3d\n");
-      for_j(nc){
+    FILE *output_file_2;
+    output_file_2 = fopen("3d_results_21_0.dat", "w");
+    fprintf(output_file_2,"x10= %lf eta0= %lf\n", x10, eta0);
+    fprintf(output_file_2,"incl= %lf omega= %lf d0= %lf phase= %lf eccentricity= %lf Skew= %lf\n", incl, omega, d0, phase, e, psi_deg);
+    fprintf(output_file_2,"mdot1= %lf beta1= %lf vinf1= %lf\n", mdot1, beta1, vinf1);
+    fprintf(output_file_2,"mdot2= %lf beta2= %lf vinf2= %lf\n", mdot2, beta2, vinf2);
+    fprintf(output_file_2,"mu1= %lf mu_av1= %lf sum_nz1= %lf nhr1= %lf\n", mu1, mu_av1, sum_nz1, nhr1);
+    fprintf(output_file_2,"mu2= %lf mu_av2= %lf sum_nz2= %lf nhr2= %lf\n", mu2, mu_av2, sum_nz2, nhr2);
+    fprintf(output_file_2,"contact surface:\n");
+    fprintf(output_file_2,"x\t\ty\t\t z\t\tv1n\t\tv1t\t\tv2n\t        v2t\t\tsigma1\t\tsigma2\t\tr\t\ttheta [degrees]\td1l\t\td2l\n");
+    //fprintf(output_file_2,"x_3d\t\ty_3d\t\tz_3d\n");
+    for_j(nc){
         for_i(nc){
             fprintf(output_file_2,"%13.8le\t%13.8le\t%13.8le\t%13.8le\t%13.8le\t%13.8le\t%13.8le\t%13.8le\t%13.8le\t%13.8le\t%13.8le\t%13.8le\t%13.8le\n" 
                     ,x_3d[i][j],y_3d[i][j],z_3d[i][j],v1n_3d[i][j], v1t_3d[i][j],v2n_3d[i][j], v2t_3d[i][j]
                     , sig1_3d[i][j], sig2_3d[i][j], r_3d[i][j], theta_3d[j],d1l_3d[i][j], d2l_3d[i][j]);
             //fprintf(output_file_2,"%13.8le\t%13.8le\t%13.8le\n", x_3d[i][j],y_3d[i][j],z_3d[i][j]);
-         }
-         //fprintf(output_file_2,"%13.8le\t%13.8le\t%13.8le\n", x_skewed[i],y_skewed[i]);
         }
-        fclose(output_file_2);
-        puts("done writing 3D results");
-      }
+         //fprintf(output_file_2,"%13.8le\t%13.8le\t%13.8le\n", x_skewed[i],y_skewed[i]);
+    }
+    fprintf(output_file_2, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+    fprintf(output_file_2, "Lxint= %lf [10^30 erg/s]   Lx= %lf [10^30 erg/s]   Lx[0.5-10.0]= %lf [10^30 erg/s]   Lx/Lkin= %lf [10^30 erg/s]  Lkin= %lf[10^30 erg/s]\n" , lxint, lx, lx1, lx/(ekin1+ekin2), ekin1+ekin2);
+
+
+    fprintf(output_file_2,"(keV)\t     (keV)\t  (10^30 erg/keV/s)\t  (10^30 ph/bin/s)\t (10^30 erg/keV/s)\n");
+
+    for(int i = 1; i < ne2+1; i++){
+        fprintf(output_file_2,"%.4le   %.4le    %13.8le\t  %13.8le\t %13.8le\n",
+                ear1[i], ear1[i+1], spectrum[i-1], photons[i-1], spectrum_int[i]);
+    }
+    fclose(output_file_2);
+    puts("done writing 3D results");
+}

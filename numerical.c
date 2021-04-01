@@ -131,6 +131,26 @@ double quad(double (*f)(double x), const double a, const double b,
 }
 
 
+double qage(double (*f)(double x), const double a, const double b,
+            const double epsabs, const double epsrel, int size_limit,int key, double* abserr) {
+
+    double function(double x, void *params){
+        return f(x);
+    }
+
+    gsl_integration_workspace *ws = gsl_integration_workspace_alloc(size_limit);
+    double result;
+    gsl_function F;
+    F.function = &function;
+    F.params = NULL;
+
+    gsl_integration_qag(&F, a, b, epsabs, epsrel, size_limit, key, ws, &result, abserr);
+    gsl_integration_workspace_free(ws);
+
+    return result;
+}
+
+
 float qsimp(double (*func)(double), double a, double b)
 {
 	float trapzd(double (*func)(double), double a, double b, int n);
