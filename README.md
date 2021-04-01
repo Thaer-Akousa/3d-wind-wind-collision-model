@@ -3,5 +3,5 @@ my finals project
 
 to compile and run:
 
-make bs
+make bs\n
 /bs
