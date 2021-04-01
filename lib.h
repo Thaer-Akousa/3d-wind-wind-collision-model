@@ -106,6 +106,7 @@ double lhs_20_3d_2_xy(double y);
 double lhs_20_3d_2_xy_bot(double y);
 double calc_width_1();
 double calc_width_2();
+double calc_cross_obsorb();
 
 
 

@@ -29,6 +29,9 @@ double normalize_angle(double theta);
 double quad(double (*f)(double x), const double a, const double b,
             const double epsabs, const double epsrel, int size_limit, double* abserr);
 
+double qage(double (*f)(double x), const double a, const double b,
+            const double epsabs, const double epsrel, int size_limit,int key, double* abserr);
+
 float qsimp(double (*func)(double), double a, double b);
 
 
