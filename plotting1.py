@@ -135,8 +135,8 @@ y_z0_l = np.concatenate((y1_z0_1,y2_z0_1,y1_z0_2,y2_z0_2))
 z_z0_l = np.concatenate((z1_z0_1,z2_z0_1,z1_z0_2,z2_z0_2))
 
 #for other parameters
-parameter1_z0  = d2l[row_start_up:row_end_up]
-parameter2_z0  = d2l[row_start_down:row_end_down:1]
+parameter1_z0  = v1t[row_start_up:row_end_up]
+parameter2_z0  = v1t[row_start_down:row_end_down:1]
 
 parameter_z0 = np.concatenate((parameter1_z0,parameter2_z0))
 x_z0 = np.concatenate((x1_z0,x2_z0))
@@ -151,7 +151,10 @@ sizes = 0.2
 fig1 = plt.figure()
 axis_lim = 5
 
+
 ax = fig1.add_subplot(111, projection='3d', aspect = 'auto')
+ax.view_init(elev = None, azim = None)
+
 plt.xlabel('x')
 plt.ylabel('y')
 ax.set_xlim(-axis_lim-1, axis_lim+1)
@@ -159,9 +162,12 @@ ax.set_ylim(-axis_lim-1, axis_lim+1)
 ax.set_zlim(-axis_lim, axis_lim)
 
 #norm = mcolors.TwoSlopeNorm(vmin = sigma1.min(), vmax= sigma1.max(), vcenter =0.03)
-
+img = ax.scatter(0, 0, 0, c = 'black')
+img = ax.scatter(1, 0, 0, c = 'black')
 img = ax.scatter(x, y, z, s=sizes, c= d1l, cmap= 'jet')
 #img = ax.scatter(x_z0, y_z0, z_z0, s= sizes_z0, c= parameter_z0, cmap= 'jet')
+
+
 
 
 
