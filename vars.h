@@ -13,8 +13,8 @@ void cooling_read(char *fname, double *elambda, double *lambda, double *nergrid,
 void planar_read(char *fname, double *e0min, double *e0bin, int *ne0, double *emin, double *ebin, int *ne, double *ear, double sp_t[NE0_MAX][NE_MAX]);
 void opacity_read(char *fname, double *eabs, double *absorp, int *nabs);
 /* functions for printing results in output files */
-void output_results_c();
-void three_d_results();
+
+void three_d_results(/*FILE *output_file_2*/);
 
 double coeff;
 
@@ -71,6 +71,9 @@ double e;
 double omega;
 double d0;
 double vt;
+double vorb_0;
+double vorb;
+double orb_per;
 
 double p; //impact parameter
 double z1,z2;
@@ -144,7 +147,8 @@ double sig1_3d[NE0_MAX][NE0_MAX], sig2_3d[NE0_MAX][NE0_MAX];
 double r_3d_top[NE0_MAX],dis_to_x_stag_top[NE0_MAX], v1n_3d_top[NE0_MAX],dxdy_3d_top[NE0_MAX],v1t_3d_top[NE0_MAX], yc_top[NE0_MAX], sig1_3d_top[NE0_MAX];
 double  y_3d_top[NE0_MAX],x_3d_top[NE0_MAX],z_3d_top[NE0_MAX];
 
-int kkk, stag_index, dis_to_x_stag[NE0_MAX], d2xdy2_3d[NE0_MAX];
+int kkk, stag_index;
+double dis_to_x_stag[NE0_MAX], d2xdy2_3d[NE0_MAX];
 
 
 double r_3d_bot[NE0_MAX],dis_to_x_stag_bot[NE0_MAX], v1n_3d_bot[NE0_MAX],dxdy_3d_bot[NE0_MAX],v1t_3d_bot[NE0_MAX], yc_bot[NE0_MAX], sig1_3d_bot[NE0_MAX];
@@ -154,7 +158,8 @@ double  y_3d_bot[NE0_MAX],x_3d_bot[NE0_MAX],z_3d_bot[NE0_MAX];
 double r_3d_top_2[NE0_MAX],dis_to_x_stag_top_2[NE0_MAX], v2n_3d_top[NE0_MAX],dxdy_3d_top_2[NE0_MAX],v2t_3d_top[NE0_MAX], yc_top_2[NE0_MAX], sig2_3d_top[NE0_MAX];
 double  y_3d_top_2[NE0_MAX],x_3d_top_2[NE0_MAX],z_3d_top_2[NE0_MAX];
 
-int kkk_2, stag_index_2, dis_to_x_stag_2[NE0_MAX], d2xdy2_3d_2[NE0_MAX];
+int kkk_2, stag_index_2;
+double dis_to_x_stag_2[NE0_MAX], d2xdy2_3d_2[NE0_MAX];
 
 
 double r_3d_bot_2[NE0_MAX],dis_to_x_stag_bot_2[NE0_MAX], v2n_3d_bot[NE0_MAX],dxdy_3d_bot_2[NE0_MAX],v2t_3d_bot[NE0_MAX], yc_bot_2[NE0_MAX], sig2_3d_bot[NE0_MAX];

@@ -9,6 +9,9 @@ INC     = vars.h lib.h numerical.h config.h
 	
 bs:	$(OBJ) $(INC)
 	$(CC) $(CFLAGS) -o bs $(OBJ) $(LDLIBS)
-	
+
+run:
+	./run_bs.sh
+
 clean:
 	rm -f bs *.o *.~

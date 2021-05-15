@@ -371,7 +371,7 @@ double density_z(double z, int i) {
 */
 
 double density_z(double z) {
-    double r = dis(z, p);
+    double r = sqrt(sq(z)+sq(p));
     double mdot, vel;
     if (nstar==1) {
         mdot = mdot1;
@@ -419,7 +419,8 @@ void atomic_weight(double *abund, double t, double *elambda, double *nergrid,
 void anomaly(double ps, double *vt, double *d12) {
     double m, ea1, ea2, d21, ea, b;
 
-    ea1 = m = ps * PI_2;
+    m = ps * PI_2;
+    ea1 = m;
     do {
         ea2 = m + e * sin(ea1);
         d21 = ea2 - ea1;
@@ -735,11 +736,11 @@ double lhs_20(double y, int nstar){
 
 double make_3d(){
     int i,j;
-    double delta_theta = PI_2/(nc-1);
+    double delta_thet = PI_2/(nc-1);
     //alpha[0] = 0.0;
 
     for(int k = 0; k < nc; k++){
-        theta_3d[k] = k * delta_theta;
+        theta_3d[k] = k * delta_thet;
         //printf("%f\n",cos(angle[k]));
     }
     //printf("i\tj\t x\t y\t z\t cos(a)\n");
@@ -881,9 +882,9 @@ double calc_velocities(){
     psi = psi_deg * (PI_2/360);
     double x_star2, y_star2;
     
-    FILE *test_file;
-    test_file = fopen("test.dat", "w");
-    fprintf(test_file,"x\t\ty\t\tz\t\tn_x\t\tn_y\t\tn_z\t\tv1_x\t\tv1_y\t\tv1_z\t\tcos_x1\t\tcos_y1\t\tcos_z1\n");
+    //FILE *test_file;
+   // test_file = fopen("test.dat", "w");
+   // fprintf(test_file,"x\t\ty\t\tz\t\tn_x\t\tn_y\t\tn_z\t\tv1_x\t\tv1_y\t\tv1_z\t\tcos_x1\t\tcos_y1\t\tcos_z1\n");
 /**********explanation************
            these are the coordinates in x,y,z; unshifted and unskewed frame of refrence.
 
@@ -938,8 +939,8 @@ double calc_velocities(){
             
             
             
-            fprintf(test_file,"%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\n",x_3d[i][j],y_3d[i][j],z_3d[i][j], 
-                        n1_x,n1_y,n1_z,v1_x,v1_y,v1_z,cos_x1,cos_y1,cos_z1);
+            //fprintf(test_file,"%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\n",x_3d[i][j],y_3d[i][j],z_3d[i][j], 
+                       // n1_x,n1_y,n1_z,v1_x,v1_y,v1_z,cos_x1,cos_y1,cos_z1);
             //printf("%e %e %e \n", v_x1,v_y1,v_z1);
             
 /*
@@ -974,7 +975,7 @@ double calc_velocities(){
             
 
             d2 = sqrt(sq(x_3d[i][j]-d) + sq(y_3d[i][j])+ sq(z_3d[i][j]) );  // Distance from the point on c.s. to center of 1st star.
-            d2s = sq(d1);
+            d2s = sq(d2);
             //printf("%e\n", d1);
             vel2 = v2(d2); // Velocity of 1st wind at point of c.s.
             
@@ -1032,7 +1033,7 @@ double calc_sigma1(){
     double psi;
     double y1,y2;
     int index;
-    double mn = v1t_3d[0][nc/2];
+    double mn = v1t_3d[0][(nc-1)/2];
     double dum_sig1[NE0_MAX], dum_sig2[NE0_MAX];
    double velocity_3d[NE0_MAX];
     
@@ -1044,15 +1045,15 @@ double calc_sigma1(){
     bb = 0;
     for(int cc=0; cc<nc; cc++){
         
-        if(v1t_3d[cc][nc/2]<mn){
-            mn = v1t_3d[cc][nc/2];
+        if(v1t_3d[cc][(nc-1)/2]<mn){
+            mn = v1t_3d[cc][(nc-1)/2];
             stag_index = cc;
         }
         
     }
    
 
-    m = y_3d[stag_index][nc/2]/ x_3d[stag_index][nc/2];
+    m = y_3d[stag_index][(nc-1)/2]/ x_3d[stag_index][(nc-1)/2];
    
     /* this is where I concatenate arrays*/
     index = 0;
@@ -1754,7 +1755,7 @@ double calc_width_1(){
         }
     }
     puts("3d first cooling layer widths done!");
-    return 0;
+    //return 0;
 }
 
 double calc_width_2(){
@@ -1884,486 +1885,21 @@ double calc_width_2(){
         }
     }
     puts("3d second cooling layer widths done!");
-    return 0;
-}
-
-double calc_cross_obsorb(){
-    ear1[ne1+1] = 40.000;
-    for( k=0; k< ne1; k++){
-        eee1 = (ear1[k]+ear1[k+1])/2.0;
-        if(eee1 <= eabs1[0]){
-            cross_abs1[k]= absorp1[0];    
-        }else if(eee1 >= eabs1[nabs1-1]){    
-            cross_abs1[k]= absorp1[nabs1-1];
-        }else{
-            cross_abs1[k]= interpolate(eabs1, absorp1, nabs1, eee1);    
-        }
-
-
-        if(eee1 <= eabs2[0]){
-            cross_abs2[k]= absorp2[0];
-        }else if(eee1 >= eabs2[nabs2-1]){
-            cross_abs2[k]= absorp2[nabs2-1];
-        }else{
-            cross_abs2[k]= interpolate(eabs2, absorp2, nabs2, eee1);        
-        }
- 
-    }
-    e0max1 = exp(e0min1 + ne01*e0bin1);
-    e0max2 = exp(e0min2 + ne02*e0bin2);
-}
-
-/*
-calc_spectra(){
+    //return 0;
     
-    for( jj=0 ; jj<1; jj++) {
-        phase = 0.3;
-
-        anomaly(phase, &vt, &d);
-
-        phi_angle = vt + PI*0.5 + omega;
-
-        phi_angle = normalize_angle(phi_angle);
-
-        printf("d= %e  vt= %e phi_angle= %e\n",d, vt, phi_angle*180/PI);
-
-        printf("%e %e %0.9e\n", vt, d, phi_angle);
-
-        lsz = cos(incl);
-        lsx = sin(incl) * cos(phi_angle);
-        lsy = sin(incl) * sin(phi_angle);
-
-        flag_eta = 0;
-        exit_status = shock_distance();
-        if (exit_status) exit(exit_status);
-
-        eta0 = (mdot1 * v1(x10)) / (mdot2 * v2(d - x10));
-
-        shock(x10, dy);
-
-        anomaly(phase, &vt, &d);
-
-        
-        //calc_phi_3d(psi_deg);
-        init_coordinates_in_x2y2z2 = make_3d();
-        init_coordinates_in_x1y1z1 = shift();
-        init_coordinates_in_xyz = skew();
-        get_r3d = get_r();
-
-        calculate_velocities = calc_velocities();
-        calculate_sigma1 = calc_sigma1();
-        calculate_sigma2 = calc_sigma2();
-        calculate_widths_1 = calc_width_1();
-        calculate_widths_2 = calc_width_2();
-
-        for(i = 0; i<ne1-1; i++){
-            spectrum[i]= 0.0;
-            spectrum_int[i]= 0.0;
-        }
-        ekin1= 0.0;
-        ekin2= 0.0;
-//start of cycle for the C.S.
-        for(i = 0; i<nc-1; i++){ //cycle of points on a line
-            for( j = 0; j<nc; j++ ){// cycle of lines
-
-                ekin11 = 0.0;
-                ekin12 = 0.0;
-                ds1 = 0.0;
-                //first shock
-                dl= d1l_3d[i][j];
-                xxc = (x_3d[i][j] - dl2 * sphi[i]);
-                yyc = (y_3d[i][j] + dl2 * cphi[i]);
-                zzc = (z_3d[i][j]);
-
-                d1 = sqrt(sq(xxc) + sq(yyc) + sq(zzc));
-
-                vel1 = v1(d1);
-
-                cos_x1 = xxc / d1;
-                cos_y1 = yyc / d1;
-                cos_z1 = zzc / d1;
-
-                v1_x = (vel1 * cos_x1);
-                v1_y = (vel1 * cos_y1);
-                v1_z = (vel1 * cos_z1);
-
-                v1n0 = -( (v1_x * n1_x[i][j]) + (v1_y * n1_y[i][j]) + (v1_z * n1_z[i][j]) );
-                rho10 = mdot1 / (PI_4 * sq(d1) * vel1);
-                eee1 = 1.957441607*mu1*sq(v1n0);
-                printf("p0: %e \n",phase);
-                printf("P1: %e %e %e \n",d,d1,vel1);
-                printf("P2: %e %e %e \n",d1l[i],xxc,yyc);
-                printf("P3: %e %e %e \n",v1n0,rho10,mu1);
-
-                if( eee1 > e0max1 ){
-                    printf("First cooling layer: Too high energy");
-                    printf("beyound the planar grid\n E= %e  %e",eee1, e0max1);
-                }
-                //second shock
-                dl = d2l_3d[i][j];
-
-                xxc = ((x_3d[i][j] -d) + dl2 * sphi[i]);
-                yyc = (y_3d[i][j] - dl2 * cphi[i]);
-                zzc = (z_3d[i][j]);
-
-                d2 = sqrt(sq(xxc) + sq(yyc) + sq(zzc));
-
-                vel2 = v2(d2);
-
-                cos_x2 = xxc / d2;
-                cos_y2 = yyc / d2;
-                cos_z2 = zzc / d2;
-
-                v2_x = (vel2 * cos_x2);
-                v2_y = (vel2 * cos_y2);
-                v2_z = (vel2 * cos_z2);
-
-                v2n0 = ( (v2_x * n2_x[i][j]) + (v2_y * n2_y[i][j]) + (v2_z * n2_z[i][j]) ) ;
-                rho20 = mdot2 / (PI_4 * sq(d2) * vel2);
-                
-                eee2 = 1.957441607*mu2*sq(v2n0);
-                if( eee1 > e0max1 ){
-                    printf("second cooling layer: Too high energy");
-                    printf("beyound the planar grid\n E= %e  %e",eee2, e0max2);
-                }
-
-                n1 = trunc((log(eee1)-e0min1)/e0bin1)+1;
-                n2 = trunc((log(eee2)-e0min2)/e0bin2)+1;
-
-printf("P4: %d %e %d %e %e %e %e %e\n", n1, eee1, n2, eee2, rho10, rho20, e0bin1, e0min1);
-
-
-                for( k=0; k<ne1; k++){
-                    if(n1 < 1){
-                        spectr1[k] = 0.0;
-                    }else{
-                        spectr1[k]= sp_t1[n1-1][k]+(sp_t1[n1][k]-sp_t1[n1-1][k])/e0bin1*(log(eee1)-e0min1 - (n1-1)*e0bin1);                        
-                    }
-
-                    if(n2 < 1){
-                        spectr2[k]= 0.0;
-                        //puts("imhere");
-                    }else{
-                        spectr2[k]= sp_t2[n2-1][k]+(sp_t2[n2][k] -sp_t2[n2-1][k])/e0bin2  *(log(eee2)-e0min2 - (n2-1)*e0bin2);
-                    }
-
-                    spectr1[k] = spectr1[k]*rho10/sq(d0)*0.507686e10;
-                    spectr2[k] = spectr2[k]*rho20/sq(d0)*0.507686e10;
-
-                }
-
-                if(flag_abs == 0){
-                    //puts("flag_abs =0");
-                    coldens11 = 0.0;
-                    coldens12 = 0.0;
-                    coldens21 = 0.0;
-                    coldens22 = 0.0;
-                    puts("flag abs = 0,");
-                    goto skip;
-                }
-
-                r1 = sqrt(sq(x_3d[i][j])+sq(yc_3d[i][j])+sq(z_3d[i][j]));
-                r1z = z_3d[i][j]/r1;
-                r1y = y_3d[i][j]/r1;
-                r1x = x_3d[i][j]/r1;
-
-                coseta = lsx*n1_x[i][j] + lsy*n1_y[i][j] + lsz*n1_z[i][j];
-
-                if(fabs(coseta)<=0.01){
-                    puts("fabs(coseta)<0.01, tangential ray full absorbtion");
-                    coldens11 = 9.9e30;
-                    coldens21 = 9.9e30;
-                    coldens22 = 9.9e30;
-                    coldens12 = 9.9e30;
-                    goto skip;
-                }
-//Check if the line of sight goes through the 1st wind only.
-                if(coseta >= 0.0){
-
-                    //  puts("coseta >= 0.0,line of site goes through 1st wind only");
-
-                    ccphi = lsx*r1x + lsy*r1y + lsz*r1z;
-                    if(fabs(ccphi) <= 1.0){
-                        ssphi = sqrt(1.0 - sq(ccphi));
-                    }else{
-                        ssphi = 0.0;
-                    }
-
-                    p = r1*ssphi;
-                    //printf("%e\n",p);
-
-                    if(p <= rstar1){ //absorption by the body of star 1
-                        puts("absorbtion by the body of star 1, skipped");
-                        coldens11 = 9.9e30;
-                        coldens12 = 9.9e30;
-                        coldens21 = 9.9e30;
-                        coldens22 = 9.9e30;
-                        goto skip;
-                    }
-                    z1 = r1*ccphi;
-                    z2 = sqrt(sq(RMAX)-sq(p));
-
-                    nstar = 1;
-                    coldens12 = 0.0;
-                    //coldens11 = quad(&density_z,z1,z2,0.0,1.0e-2,1000,&Ierror);
-                    //coldens11 = qsimp(&density_z,z1,z2);
-                    coldens11 = qage(&density_z,z1,z2,0.0,1.0e-2,1000,1,&Ierror);
-                    coldens22 = 0.0;
-                    coldens21 = coldens11 + sig1_3d[i][j]/fabs(coseta);
-                }else{ //line of sight goes into the second wind, trace the ray
-
-                    r2 = sqrt(sq(d-x_3d[i][j])+sq(yc_3d[i][j])+sq(z_3d[i][j]));// Find p, z1 first.
-                    r2z = z_3d[i][j]/r2;
-                    r2y = y_3d[i][j]/r2;
-                    r2x = -(d-x_3d[i][j])/r2;
-//Angle between the radius-vector from the 2nd star to the point on the c.s.
-//and the line of sight phi.
-                    ccphi = lsx*r2x+lsy*r2y+lsz*r2z;
-
-                    if(fabs(ccphi)<= 1.0){
-                        ssphi = sqrt(1.0-sq(ccphi));
-                    }else{
-                        ssphi = 0.0;
-                    }
-                    p = r2*ssphi;
-                    if(p <= rstar2){  //absorption by the body of star 2
-                        coldens11 = 9.9e30;
-                        coldens12 = 9.9e30;
-                        coldens21 = 9.9e30;
-                        coldens22 = 9.9e30;
-                        goto skip;
-                    }
-                    z1 = r2*ccphi;
-                    d2 = sqrt(sq(d-xc[nc][j])+sq(y_3d[nc][j])+sq(z_3d[nc][j]));
-                    psimax = acos((d-x_3d[nc][j])/d2);
-                    psi = acos((d-x_3d[i][j])/r2);
-                    z2 = z1;
-                    t = 0.0;
-                    while(psi <= psimax){
-                        t = t + d/100.0;
-                        xxc = r1x*r1 + t*lsx;
-                        yy = r1y*r1 + t*lsy;
-                        zz = r1z*r1 + t*lsz;
-                        yyc = sqrt(sq(yy)+sq(zz));
-                        d2 = sqrt(sq(d-xxc)+sq(yyc));
-                        psi = acos((d-xxc)/d2);
-
-                        ps2 = 0.0;
-                        dd2 = d-x_3d[0][j];
-                        for( k=1; k<nc; k++){
-                            dd1 = dd2;
-                            ps1 = ps2;
-                            dd2 = sqrt(sq(d-x_3d[k][j])+sq(y_3d[k][j])+sq(z_3d[k][j]));
-                            ps2 = acos((d-x_3d[k][j])/dd2);
-                            if(ps2 >= psi) break;
-                        }
-
-                        dc = dd1 + (dd2-dd1)/(ps2-ps1) * (psi-ps1);
-                        if(d2 <= dc) break;
-                    }
-                    if(psi > psimax){ //No intersection, we are in the 2nd wind.
-                        nstar = 2;
-                        z2 = sqrt(sq(RMAX)-sq(p));
-                        coldens21 = 0.0;
-                        
-                        //coldens22 = quad(&density_z,z1,z2,0.0,1.0e-2,1000,&Ierror);
-                        //coldens22 = qsimp(&density_z,z1,z2);
-                        coldens22 = qage(&density_z,z1,z2,0.0,1.0e-2,1000,1,&Ierror);
-                        coldens11 = 0.0;
-                        coldens12 = coldens22 + sig2_3d[i][j]/fabs(coseta);
-                    }else{ //There is intersection.
-
-//puts("psi is smaller than psimax: intersected with the second wind");
-                        nstar = 2;
-                        r2 = sqrt(sq(d-xxc)+sq(yy)+sq(zz));
-                        r2x = -(d-xxc)/d2;
-                        r2y = yy/d2;
-                        r2z = zz/d2;
-                        ccphi = lsx*r2x + lsy*r2y +lsz*r2z;
-                        p = d2*sqrt(1.0-sq(ccphi));
-                        z2 = d2*ccphi;
-                        //dummy2 = quad(&density_z,z1,z2,0.0,1.0e-2,1000,&Ierror);
-                        //dummy2 = qsimp(&density_z,z1,z2);
-                        dummy2 = qage(&density_z,z1,z2,0.0,1.0e-2,1000,1,&Ierror);
-                        
-//1st wind. Find p, z of the intersection point for the 1st wind.
-                        nstar = 1;
-                        r1 = sqrt(sq(xxc)+sq(yy)+sq(zz));
-                        r1x = xxc/r1;
-                        r1y = yy/r1;
-                        r1z = zz/r1;
-                        ccphi = lsx*r1x + lsy*r1y + lsz*r1z;
-                        if(fabs(ccphi) <= 1.0){
-                            ssphi = sqrt(1.0-sq(ccphi));
-                        }else{
-                            ssphi = 0.0;
-                        }
-                        p = r1*ssphi;
-                        if(p <= rstar1){
-                            coldens11 = 9.9e30;
-                            coldens12 = 9.9e30;
-                            coldens21 = 9.9e30;
-                            coldens22 = 9.9e30;
-                            goto skip;
-                        }
-                        z1 = r1*ccphi;
-                        z2 = sqrt(sq(RMAX)-sq(p));
-                        //dummy1 = quad(&density_z,z1,z2,0.0,1.0e-2,1000,&Ierror);
-                        //dummy1 = qsimp(&density_z,z1,z2);
-                        dummy1 = qage(&density_z,z1,z2,0.0,1.0e-2,1000,1,&Ierror);
-                        
-//Column density of the cooling layers in the intersection point.
-//c Linear interpolation for now.
-                        for(int qqq = 0; qqq < nc; qqq++){
-                            y_interp[qqq] = y_3d[qqq][j];
-                            sig1_interp[qqq] = sig1_3d[qqq][j];
-                            sig2_interp[qqq] = sig2_3d[qqq][j];
-                        }
-                        dum1 = interpolate(y_interp, sig1_interp, nc, yyc);
-                        dum2 = interpolate(y_interp, sig2_interp, nc, yyc);
-                        
-                        nx1 = -sphi[k];
-                        ny1 = cphi[k]*yy/yyc;
-                        coseta1 = lsx*nx1 + lsy*ny1 + lsz*nz1;
-//absorbtion my the material of the 1st wind
-                        if(fabs(coseta1)< 0.01){
-                            coldens11 = 9.9e30;
-                            coldens21 = 9.9e30;
-                        }else{
-                            coldens11 = dum1/fabs(coseta1) + dummy1;
-                            coldens21 = coldens11;
-                        }
-                        //Absorption by the material of the 2nd wind.
-
-//1st intersection
-                        coldens12 = sig2_3d[i][j]/fabs(coseta);
-//2nd intersection.
-                        if(fabs(coseta1) < 0.01){
-                            coldens12 = 9.9e30;
-                            coldens22 = 9.9e30;
-                        }else{
-                            coldens12 = coldens12 + dum2/fabs(coseta1);
-                            coldens22 = dum2/fabs(coseta1);
-                        }
-                        coldens12 = coldens12 + dummy2;
-                        coldens22 = coldens22 + dummy2;
-                        //printf("%e  %e\n",coldens11,coldens22);
-                        //printf("%e  %e  %e  %e\n",coldens11,coldens12,coldens21 ,coldens22);
-                    }
-
-                    //printf("%e  %e  %e  %e\n",coldens11,coldens12,coldens21 ,coldens22);
-                }
-
-                coldens11 = coldens11*541.6787246/mu_av1/d0*nhr1;
-                coldens12 = coldens12*541.6787246/mu_av2/d0*nhr2;
-                coldens21 = coldens21*541.6787246/mu_av1/d0*nhr1;
-                coldens22 = coldens22*541.6787246/mu_av2/d0*nhr2;
-
-                if(coldens11 < 0.0){
-                    printf("coldens11 = %e", coldens11);
-                }else if(coldens21 < 0.0){
-                    printf("coldens21 = %e", coldens21);
-                }else if(coldens12 < 0){
-                    printf("coldens12 = %e", coldens12);
-                }else if(coldens22 < 0){
-                    printf("coldens22 = %e", coldens22);
-                }
-//continue;//this is where the program jumps if no wind absorbtion is accounted for
-skip:
-                if(i == 0){
-                    ds = delta_theta*sq(y_3d[1][j])/4;
-                    //puts("i==1");
-
-                }else{
-
-                    //puts("i else");
-                    dy = (y_3d[i][j]+y_3d[i+1][j])/2.0 - (y_3d[i][j]+y_3d[i-1][j])/2.0;
-
-                    dummy = dy/sphi[i];
-                    ds = delta_theta*y_3d[i][j]*dummy;
-                }
-
-                lx1 = 0.0;
-                    for (k = 1; k<ne1+1 ; k++){
-                        //eee1 = (ear1[k]+ear1[k+1])/2.0;
-                        //puts("after skipping");
-                        if(k == ne1){
-                          cross_abs1[k] = cross_abs1[k-1];
-                          cross_abs2[k] = cross_abs2[k-1];
-                        }
-                        tau1 = cross_abs1[k]*coldens11+cross_abs2[k]*coldens12;
-                        dummy1 = spectr1[k-1]*exp(-tau1);
-                        tau2 = cross_abs1[k]*coldens21+cross_abs2[k]*coldens22;
-                        dummy2 = spectr2[k-1]*exp(-tau2);
-                        //printf("%e  %e\n",cross_abs1[k],cross_abs2[k]);
-                        //printf("%e  %e\n", dummy1, dummy2);
-                        //printf("%.70e\n",exp(-tau1));
-                        dummy1 = dummy1*ds*sq(d0*rsol);
-                        dummy2 = dummy2*ds*sq(d0*rsol);
-                        //printf( "%d %d %e %e %e %e %e\n", j, k, eee1, xc[i], yc[i], p, coseta);
-                        //printf("%e  %e  %e\n",ds,d0,rsol);
-
-                        spectrum[k-1] = spectrum[k-1] + dummy1 + dummy2;
-                        //if (spectrum[k] < 0){
-                          //fprintf(test_file,"%e  %e  %e  %e %e %e %e %e \n", dummy1, dummy2, tau1, tau2, spectr1[k], spectr2[k], ds, dy);
-//                        spectrum[k] = spectrum[k-1]+ dummy1 + dummy2;
-//                         if(spectrum[k-1] < 0){
-//                           spectrum[k] = spectrum[k+1] + dummy1 + dummy2;
-//                         }
-//                         if(spectrum[k] < 0){
-//                           spectrum[k] = spectrum[k+1];
-//                          }
-//
-                        //}
-
-
-                        //printf("d0= %e ds= %e\n", d0, ds );
-                        spectrum_int[k] = spectrum_int[k]+ spectr1[k-1]*ds*sq(d0*rsol)+ spectr2[k-1]*ds*sq(d0*rsol);
-                        lx1 = lx1+(dummy1+dummy2)*(ear1[k+1]-ear1[k]);
-                        //printf("lx1= %e\n", lx1);
-                        //printf("%e %e %e %e\n", dummy1, ds, ds*sq(d0*rsol), dummy);
-                        //printf("%d %d %e %e  %e  %e  %e\n", j, k, spectrum[k], dummy1, dummy2, ds, ear1[k]);
-                    }
-                    e1 = 6.31e5*rho10*cube(v1n0)/2.0*ds;
-                    e2 = 6.31e5*rho20*cube(v2n0)/2.0*ds;
-                    ekin1 = ekin1 + e1;
-                    ekin2 = ekin2 + e2;
-
-                    ekin11 = ekin11 + e1;
-                    ekin12 = ekin12 + e2;
-                    ds1 = ds1 + ds;
-                
-                
-            }//end of cycle for lines
-
-        }//end of cycle for points
-        fclose(test_file);
-
-            lx = 0.0;
-            lx1 = 0.0;
-            lxint = 0.0;
-            for(k = 0; k<ne1 ; k++){
-                //puts("final loop");
-                eee1 = (ear1[k] + ear1[k+1])/2.0 *1.6e-9;//photon energy in erg
-                photons[k] = spectrum[k] * (ear1[k+1]-ear1[k])/eee1;
-                lx = lx + spectrum[k]*(ear1[k+1]-ear1[k]);
-                lxint = lxint + spectrum_int[k]*(ear1[k+1]-ear1[k]);
-                //printf("%e  %e  %e  %e\n",lx,lxint,spectrum[k],ear1[k]);
-                if(ear1[k] >= 0.5 && ear1[k] < 10.0){
-                    lx1 = lx1 + spectrum[k]*(ear1[k+1]-ear1[k]);
-                    //puts("imhere");
-                    //printf("%e\n",lx1,spectrum[k]);
-                }
-                //printf("%e  %e  %e\n",lx,lxint,ekin1+ekin2);
-                //printf("%e\n",spectrum[k]);
-            }
-
-
-
-        
-    }
-
+}
+
+double calc_psi(){
+    double v_orb, period, sum_mass;
+    vorb = sqrt( (4*sq(PI)*cube(d0)/sq(orb_per)) * ((2/(d)) - (1/(d0/d0)) ));
+    //period = (2*PI*d0 *696340)/(vorb_0*1000*86400); 
+    v_orb = x10/d*vorb;
+    v_orb = v_orb/1000;
+    psi_deg = atan(v_orb/v1(x10)) *(180/PI);
+    sum_mass = (4*sq(PI)*cube(d0*rsol))/(sq(orb_per*86400)*6.67408e-8)/1.9891e33 ;
+
+    printf("period= %e vorb= %e vorb_x10= %e psi= %e mass_sum = %e d0= %e\n", orb_per, vorb, v_orb*1000, psi_deg, sum_mass, d0);
+  
 }
 
 
-*/

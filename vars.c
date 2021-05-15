@@ -108,25 +108,8 @@ void opacity_read(char *fname, double *eabs, double *absorp, int *nabs){
 void init_test_values() {
     N = 401;
 //    ph[]= { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 };
-    ph[0] = 0.00;
-    ph[1] = 0.05;
-    ph[2] = 0.10;
-    ph[3] = 0.15;
-    ph[4] = 0.20;
-    ph[5] = 0.21;
-    ph[6] = 0.22;
-    ph[7] = 0.23;
-    ph[8] = 0.24;
-    ph[9] = 0.25;
-    ph[10] = 0.26;
-    ph[11] = 0.27;
-    ph[12] = 0.28;
-    ph[13] = 0.29;
-    ph[14] = 0.30;
-    ph[15] = 0.35;
-    ph[16] = 0.40;
-    ph[17] = 0.45;
-    ph[18] = 0.50;
+   
+    
 
 
     angr[0] = 12.00;
@@ -189,14 +172,14 @@ void init_test_values() {
 
     d0 = 60.000;
     incl = 90.0;
-    psi_deg = 0.0;
     omega = 270.00;
-    e = 0.0;
+    e = 0.3;
 
-    mdot1 = 2;
+    mdot1 = 1;
     vinf1 = 2000.0;
-    beta1 = 1.0;
+    beta1 = 2.2;
     rstar1 = 10;
+
     vinf1_min = 2000.0;
     vinf1_max = 2000.0;
     kv1 = 1;
@@ -207,10 +190,11 @@ void init_test_values() {
     mdot1_max = 2.0;
     km1 = 1;
 
-    mdot2 = 1;
-    beta2 = 1.0;
-    rstar2 = 10;
+    mdot2 = 0.5;
     vinf2 = 2000.0;
+    beta2 = 1.3;
+    rstar2 = 10;
+   
     vinf2_min = 2000.0;
     vinf2_max = 2000.0;
     kv2 = 1;
@@ -223,34 +207,10 @@ void init_test_values() {
 }
 
 
-void output_results_c(){
 
-    FILE *output_file;
+void three_d_results(FILE *output_file_2){
 
-    output_file = fopen("results_c.dat", "w");
-    //for(int kk = 0; kk<nb_ph; kk++){
-      fprintf(output_file,"x10= %lf eta0= %lf\n", x10, eta0);
-      fprintf(output_file,"incl= %lf omega= %lf d0= %lf phase= %lf eccentricity= %lf\n", incl, omega, d0, phase, e);
-      fprintf(output_file,"mdot1= %lf beta1= %lf vinf1= %lf\n", mdot1, beta1, vinf1);
-      fprintf(output_file,"mdot2= %lf beta2= %lf vinf2= %lf\n", mdot2, beta2, vinf2);
-      fprintf(output_file,"mu1= %lf mu_av1= %lf sum_nz1= %lf nhr1= %lf\n", mu1, mu_av1, sum_nz1, nhr1);
-      fprintf(output_file,"mu2= %lf mu_av2= %lf sum_nz2= %lf nhr2= %lf\n", mu2, mu_av2, sum_nz2, nhr2);
-      fprintf(output_file,"contact surface:\n");
-      fprintf(output_file,"# \txc\t\tyc\t\tv1n\t\tv1t\t\tv2n\t    v2t\t\tcosphi\t\tsinphi\t\td1l\t\td2l\t\tsig1\t      sig2\n" );
-      for_i(nc) {
-          fprintf(output_file,"%13.8le %13.8le %13.8le %13.8le %13.8e %13.8le %13.8le %13.8le %13.8le %13.8le %13.8le %13.8le\n",
-                  xc[i], yc[i], v1n[i], v1t[i], v2n[i], v2t[i], cphi[i], sphi[i], d1l[i], d2l[i], sig1[i], sig2[i]);
-      }
-
-      
-      fclose(output_file);
-      puts("done writing file 1");
-    }
-    //}
-void three_d_results(){
-
-    FILE *output_file_2;
-    output_file_2 = fopen("3d_results_21_0.dat", "w");
+   
     fprintf(output_file_2,"x10= %lf eta0= %lf\n", x10, eta0);
     fprintf(output_file_2,"incl= %lf omega= %lf d0= %lf phase= %lf eccentricity= %lf Skew= %lf\n", incl, omega, d0, phase, e, psi_deg);
     fprintf(output_file_2,"mdot1= %lf beta1= %lf vinf1= %lf\n", mdot1, beta1, vinf1);
@@ -280,6 +240,6 @@ void three_d_results(){
         fprintf(output_file_2,"%.4le   %.4le    %13.8le\t  %13.8le\t %13.8le\n",
                 ear1[i], ear1[i+1], spectrum[i-1], photons[i-1], spectrum_int[i]);
     }
-    fclose(output_file_2);
+   
     puts("done writing 3D results");
 }
