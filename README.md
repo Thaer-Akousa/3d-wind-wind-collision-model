@@ -12,5 +12,11 @@ data of opacity values.
 data of the cooling function
 spectral grid from a planar-shock model
 
+commands:
 make bs
 make run
+
+FUTURE NOTES:
+If you want to include centrifugal forces then rewrite in C++ with objects or atleast creat structures.
+Learn how to run multiple none-dependent function in parallel. 
+Assign initial parameters (terminal vel, mass loss, numb of grid points etc...) from a simple text file instead of delving into the code.
